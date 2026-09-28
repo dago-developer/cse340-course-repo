@@ -177,3 +177,92 @@ VALUES
     'UnityServe Community Center',
     '2026-11-07'
 );
+
+-- =========================================================
+-- SERVICE PROJECT CATEGORIES
+-- =========================================================
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE service_project_category (
+    project_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+
+    CONSTRAINT fk_project_category_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_project(project_id),
+
+    CONSTRAINT fk_project_category_category
+        FOREIGN KEY (category_id)
+        REFERENCES category(category_id),
+
+    PRIMARY KEY (project_id, category_id)
+);
+
+-- =========================================================
+-- CATEGORY DATA
+-- =========================================================
+
+INSERT INTO category (name)
+VALUES
+    ('Construction & Maintenance'),
+    ('Environment & Sustainability'),
+    ('Education'),
+    ('Community Support'),
+    ('Food & Donations');
+
+-- =========================================================
+-- SERVICE PROJECT / CATEGORY RELATIONSHIPS
+-- =========================================================
+
+INSERT INTO service_project_category (project_id, category_id)
+VALUES
+    -- BrightFuture Builders
+    (1, 1),
+    (1, 4),
+
+    (2, 1),
+    (2, 4),
+
+    (3, 1),
+    (3, 4),
+
+    (4, 1),
+    (4, 4),
+
+    (5, 1),
+    (5, 2),
+
+    -- GreenHarvest Growers
+    (6, 2),
+    (6, 4),
+
+    (7, 2),
+    (7, 3),
+
+    (8, 2),
+    (8, 3),
+
+    (9, 2),
+    (9, 5),
+
+    (10, 2),
+    (10, 3),
+
+    -- UnityServe Volunteers
+    (11, 4),
+    (11, 5),
+
+    (12, 4),
+    (12, 5),
+
+    (13, 2),
+    (13, 4),
+
+    (14, 4),
+
+    (15, 4),
+    (15, 5);
