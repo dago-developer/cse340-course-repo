@@ -1,4 +1,3 @@
-
 <%- include('partials/header') %>
 
 <main>
@@ -12,16 +11,20 @@
         <% organizations.forEach(organization => { %>
 
             <li>
+
                 <img
                     src="/images/<%= organization.logo_filename %>"
                     alt="<%= organization.name %> logo"
                 >
 
-                <strong><%= organization.name %></strong>
+                <a href="/organization/<%= organization.organization_id %>">
+                    <%= organization.name %>
+                </a>
 
                 <p><%= organization.description %></p>
 
                 <p><%= organization.contact_email %></p>
+
             </li>
 
         <% }); %>
