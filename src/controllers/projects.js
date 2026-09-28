@@ -3,6 +3,8 @@ import {
     getProjectDetails
 } from '../models/projects.js';
 
+import { getCategoriesByProjectId } from '../models/categories.js';
+
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
 // Controller for the upcoming service projects page
@@ -20,11 +22,14 @@ const showProjectDetailsPage = async (req, res) => {
 
     const project = await getProjectDetails(projectId);
 
+    const categories = await getCategoriesByProjectId(projectId);
+
     const title = 'Service Project Details';
 
     res.render('project', {
         title,
-        project
+        project,
+        categories
     });
 };
 

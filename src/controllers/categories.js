@@ -1,6 +1,10 @@
-import { getAllCategories } from '../models/categories.js';
+import {
+    getAllCategories,
+    getCategoryDetails,
+    getProjectsByCategoryId
+} from '../models/categories.js';
 
-// Define the categories page controller
+// Controller for the categories list page
 const showCategoriesPage = async (req, res) => {
     const categories = await getAllCategories();
 
@@ -9,5 +13,25 @@ const showCategoriesPage = async (req, res) => {
     res.render('categories', { title, categories });
 };
 
+// Controller for the category details page
+const showCategoryDetailsPage = async (req, res) => {
+    const categoryId = req.params.id;
+
+    const category = await getCategoryDetails(categoryId);
+
+    const projects = await getProjectsByCategoryId(categoryId);
+
+    const title = 'Category Details';
+
+    res.render('category', {
+        title,
+        category,
+        projects
+    });
+};
+
 // Export controller functions
-export { showCategoriesPage };
+export {
+    showCategoriesPage,
+    showCategoryDetailsPage
+};
