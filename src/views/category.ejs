@@ -7,22 +7,34 @@
     <h2><%= category.name %></h2>
 
     <p>
-        Description: <%= category.description %>
+        <a href="/edit-category/<%= category.category_id %>">
+            Edit Category
+        </a>
     </p>
 
     <h3>Service Projects</h3>
 
-    <ul>
-        <% projects.forEach(project => { %>
+    <% if (projects.length > 0) { %>
 
-            <li>
-                <a href="/project/<%= project.project_id %>">
-                    <%= project.title %>
-                </a>
-            </li>
+        <ul>
 
-        <% }); %>
-    </ul>
+            <% projects.forEach(project => { %>
+
+                <li>
+                    <a href="/project/<%= project.project_id %>">
+                        <%= project.title %>
+                    </a>
+                </li>
+
+            <% }); %>
+
+        </ul>
+
+    <% } else { %>
+
+        <p>No service projects are assigned to this category.</p>
+
+    <% } %>
 
 </main>
 

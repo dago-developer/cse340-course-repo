@@ -87,10 +87,100 @@ const getProjectDetails = async (id) => {
     return result.rows.length > 0 ? result.rows[0] : null;
 };
 
+const createProject = async (
+    title,
+    description,
+    location,
+    date,
+    organizationId
+) => {
+    const query = `
+        INSERT INTO service_project (
+            title,
+            description,
+            location,
+            date,
+            organization_id
+        )
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING project_id;
+    `;
+
+    const queryParams = [
+        title,
+        description,
+        location,
+        date,
+        organizationId
+    ];
+
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log(
+            'Created new project with ID:',
+            result.rows[0].project_id
+        );
+    }
+
+    return result.rows[0].project_id;
+};
+
+const updateProject = async (
+    projectId,
+    title,
+    description,
+    location,
+    date,
+    organizationId
+) => {
+    const query = `
+        UPDATE service_project
+        SET
+            title = $1,
+            description = $2,
+            location = $3,
+            date = $4,
+            organization_id = $5
+        WHERE project_id = $6
+        RETURNING project_id;
+    `;
+
+    const queryParams = [
+        title,
+        description,
+        location,
+        date,
+        organizationId,
+        projectId
+    ];
+
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to update project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log(
+            'Updated project with ID:',
+            result.rows[0].project_id
+        );
+    }
+
+    return result.rows[0].project_id;
+};
+
 // Export the model functions
 export {
     getAllProjects,
     getProjectsByOrganizationId,
     getUpcomingProjects,
-    getProjectDetails
+    getProjectDetails,
+    createProject,
+    updateProject
 };
