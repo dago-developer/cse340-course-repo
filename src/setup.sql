@@ -309,3 +309,16 @@ SELECT
 FROM users u
 JOIN roles r
     ON u.role_id = r.role_id;
+
+
+-- ============================================
+-- W05: AUTHENTICATION AND AUTHORIZATION
+-- Ensure the required user roles exist
+-- ============================================
+
+INSERT INTO public.roles (role_name)
+VALUES
+    ('admin'),
+    ('user')
+ON CONFLICT (role_name) DO NOTHING;
+
