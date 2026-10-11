@@ -1,0 +1,25 @@
+
+<%- include('partials/header') %>
+
+<main>
+    <h1><%= title %></h1>
+
+    <h2>Dashboard</h2>
+
+    <p>Name: <%= name %></p>
+    <p>Email: <%= email %></p>
+
+</main>
+
+```ejs
+<% if (user && user.role_name === 'admin') { %>
+    <section class="dashboard-admin">
+        <h2>Administration</h2>
+        <p>Manage registered users and review their assigned roles.</p>
+        <a href="/users">View Registered Users</a>
+    </section>
+<% } %>
+```
+
+
+<%- include('partials/footer') %>

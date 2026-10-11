@@ -1,5 +1,6 @@
 
 import db from './db.js';
+import bcrypt from 'bcrypt';
 
 const createUser = async (name, email, passwordHash) => {
     const defaultRole = 'user';
@@ -43,4 +44,74 @@ const createUser = async (name, email, passwordHash) => {
     return result.rows[0].user_id;
 };
 
-export { createUser };
+
+const findUserByEmail = async (email) => {
+    const query = `
+        SELECT
+            u.user_id,
+            u.name,
+            u.email,
+            u.password_hash,
+            r.role_name
+        FROM users AS u
+        JOIN roles AS r
+            ON u.role_id = r.role_id
+        WHERE u.email = $1
+    `;
+
+    const queryParams = [email];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        return null;
+    }
+
+    return result.rows[0];
+};
+
+const verifyPassword = async (password, passwordHash) => {
+    return bcrypt.compare(password, passwordHash);
+};
+
+const authenticateUser = async (email, password) => {
+    const user = await findUserByEmail(email);
+
+    if (!user) {
+        return null;
+    }
+
+    const isPasswordValid = await verifyPassword(
+        password,
+        user.password_hash
+    );
+
+    if (!isPasswordValid) {
+        return null;
+    }
+
+    // Never include the password hash in the session user object.
+    const { password_hash, ...authenticatedUser } = user;
+
+    return authenticatedUser;
+};
+
+const getAllUsers = async () => {
+    const query = `
+        SELECT
+            u.user_id,
+            u.name,
+            u.email,
+            r.role_name
+        FROM public.users AS u
+        JOIN public.roles AS r
+            ON u.role_id = r.role_id
+        ORDER BY u.user_id ASC
+    `;
+
+    const result = await db.query(query);
+    return result.rows;
+};
+
+
+
+export { createUser, authenticateUser, getAllUsers };
